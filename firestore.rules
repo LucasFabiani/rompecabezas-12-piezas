@@ -1,0 +1,14 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /puzzle/global/pieces/{pieceId} {
+      allow read: if true;
+      allow create: if pieceId in [
+        '1','2','3','4','5','6',
+        '7','8','9','10','11','12'
+      ];
+      allow update, delete: if false;
+    }
+  }
+}

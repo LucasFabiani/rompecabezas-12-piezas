@@ -1,0 +1,17 @@
+*{box-sizing:border-box}
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#222;background:#f4f1ea}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.app{width:min(100%,1000px)}
+.intro{text-align:center;margin-bottom:20px}
+h1{font-size:clamp(2rem,6vw,3.5rem);margin:0 0 8px}
+.puzzle-wrap{background:#222;padding:10px;border-radius:18px;box-shadow:0 15px 40px #0003}
+.puzzle{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(2,1fr);aspect-ratio:3/1;overflow:hidden;border-radius:10px}
+.piece{position:relative;border:1px solid #fff8;background-repeat:no-repeat;background-size:600% 200%;display:flex;align-items:center;justify-content:center}
+.piece.found{animation:appear .65s ease}
+.piece.missing{background:#555}
+.piece.missing span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;background:#0006;font-weight:800}
+button{border:0;border-radius:999px;padding:14px 26px;font-size:1rem;font-weight:700;cursor:pointer;background:#222;color:#fff}
+.hidden{display:none!important}
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#222;color:#fff;padding:14px 22px;border-radius:999px;box-shadow:0 8px 25px #0004}
+@keyframes appear{0%{transform:scale(.7);filter:brightness(1.8)}70%{transform:scale(1.04)}100%{transform:scale(1);filter:brightness(1)}}
+@media(max-width:600px){body{padding:10px}.puzzle-wrap{padding:6px;border-radius:12px}.piece.missing span{width:28px;height:28px;font-size:.8rem}}
