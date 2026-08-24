@@ -1,163 +1,44 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rompecabezas</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <title>Rompecabezas</title>
+
+  <script>
+    const l = window.location;
+
+    /*
+      GitHub Pages Project Site:
+      https://usuario.github.io/repositorio/ruta
+
+      Tenemos que conservar:
+      /repositorio/
+
+      y convertir:
+      /4
+
+      en:
+      /?p=/4
+    */
+
+    const repo = "/rompecabezas-12-piezas";
+
+    const path = l.pathname
+      .replace(repo, "")
+      .replace(/^\/+/, "");
+
+    l.replace(
+      l.protocol + "//" +
+      l.hostname +
+      repo +
+      "/?p=/" +
+      path +
+      (l.search ? "&q=" + l.search.substring(1) : "") +
+      l.hash
+    );
+  </script>
 </head>
+
 <body>
-<main class="app">
-  <section class="intro">
-    <h1>🧩 Rompecabezas</h1>
-    <p id="message">Encontrá las 12 piezas.</p>
-    <strong id="counter">Cargando...</strong>
-  </section>
-
-  <div class="puzzle-wrap">
-    <div id="puzzle" class="puzzle"></div>
-  </div>
-
-  <section id="videoSection" class="intro hidden">
-    <h2>🎉 ¡Rompecabezas completo!</h2>
-    <p>Ahora podés ver el video.</p>
-    <button id="watchButton">▶ Ver video</button>
-  </section>
-</main>
-
-<div id="toast" class="toast hidden"></div>
-
-<script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import {
-  getFirestore, doc, getDoc, setDoc, collection, getDocs
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-/* REEMPLAZÁ ESTOS DATOS CON LOS DE TU PROYECTO FIREBASE */
-const firebaseConfig = {
-  apiKey: "AIzaSyC21E8x8LCwVz8e7DgGXY1K6-poIsND8Xc",
-  authDomain: "rompecabezas-d91c6.firebaseapp.com",
-  projectId: "rompecabezas-d91c6",
-  storageBucket: "rompecabezas-d91c6.firebasestorage.app",
-  messagingSenderId: "398199472719",
-  appId: "1:398199472719:web:62123983a03628dad0603a",
-  measurementId: "G-ZCBXKN3L7R"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const TOTAL = 12;
-const VIDEO_URL = "https://www.youtube.com/watch?v=PEGAR_ID_DEL_VIDEO";
-
-const puzzle = document.getElementById("puzzle");
-const counter = document.getElementById("counter");
-const message = document.getElementById("message");
-const videoSection = document.getElementById("videoSection");
-const toast = document.getElementById("toast");
-
-function pieceFromURL() {
-  const path = location.pathname.replace(/^\/+|\/+$/g, "");
-  const n = Number(path);
-  return Number.isInteger(n) && n >= 1 && n <= 12 ? n : null;
-}
-
-function backgroundPosition(n) {
-  const col = (n - 1) % 6;
-  const row = Math.floor((n - 1) / 6);
-  return `${col * 20}% ${row * 100}%`;
-}
-
-function draw(found) {
-  puzzle.innerHTML = "";
-
-  for (let n = 1; n <= TOTAL; n++) {
-    const piece = document.createElement("div");
-    piece.className = "piece " + (found.has(n) ? "found" : "missing");
-
-    if (found.has(n)) {
-      piece.style.backgroundImage = "url('assets/imagen.jpg')";
-      piece.style.backgroundPosition = backgroundPosition(n);
-    } else {
-      piece.innerHTML = `<span>${n}</span>`;
-    }
-
-    puzzle.appendChild(piece);
-  }
-
-  counter.textContent = `${found.size} / ${TOTAL} piezas encontradas`;
-
-  if (found.size === TOTAL) {
-    videoSection.classList.remove("hidden");
-    message.textContent = "¡Lo lograron! El rompecabezas está completo.";
-  }
-}
-
-function notify(text) {
-  toast.textContent = text;
-  toast.classList.remove("hidden");
-  setTimeout(() => toast.classList.add("hidden"), 3000);
-}
-
-async function getFoundPieces() {
-  const snap = await getDocs(
-    collection(db, "puzzle", "global", "pieces")
-  );
-  const found = new Set();
-
-  snap.forEach(item => {
-    const n = Number(item.id);
-    if (n >= 1 && n <= TOTAL) found.add(n);
-  });
-
-  return found;
-}
-
-async function registerPiece(n) {
-  const ref = doc(db, "puzzle", "global", "pieces", String(n));
-  const old = await getDoc(ref);
-
-  if (!old.exists()) {
-    await setDoc(ref, {
-      found: true,
-      foundAt: new Date().toISOString()
-    });
-    return true;
-  }
-
-  return false;
-}
-
-document.getElementById("watchButton").onclick = () => {
-  window.open(VIDEO_URL, "_blank", "noopener,noreferrer");
-};
-
-async function start() {
-  try {
-    const piece = pieceFromURL();
-    const found = await getFoundPieces();
-
-    draw(found);
-
-    if (piece !== null) {
-      if (!found.has(piece)) {
-        await registerPiece(piece);
-        found.add(piece);
-        draw(found);
-        notify(`🧩 ¡Encontraste la pieza ${piece}!`);
-      } else {
-        notify(`La pieza ${piece} ya había sido encontrada.`);
-      }
-    }
-  } catch (error) {
-    console.error(error);
-    message.textContent = "No se pudo conectar con Firebase.";
-    counter.textContent = "Revisá la configuración.";
-  }
-}
-
-start();
-</script>
 </body>
 </html>
