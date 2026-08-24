@@ -36,19 +36,20 @@ import {
 
 /* REEMPLAZÁ ESTOS DATOS CON LOS DE TU PROYECTO FIREBASE */
 const firebaseConfig = {
-  apiKey: "PEGAR_API_KEY",
-  authDomain: "PEGAR_AUTH_DOMAIN",
-  projectId: "PEGAR_PROJECT_ID",
-  storageBucket: "PEGAR_STORAGE_BUCKET",
-  messagingSenderId: "PEGAR_MESSAGING_SENDER_ID",
-  appId: "PEGAR_APP_ID"
+  apiKey: "AIzaSyC21E8x8LCwVz8e7DgGXY1K6-poIsND8Xc",
+  authDomain: "rompecabezas-d91c6.firebaseapp.com",
+  projectId: "rompecabezas-d91c6",
+  storageBucket: "rompecabezas-d91c6.firebasestorage.app",
+  messagingSenderId: "398199472719",
+  appId: "1:398199472719:web:62123983a03628dad0603a",
+  measurementId: "G-ZCBXKN3L7R"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const TOTAL = 12;
-const VIDEO_URL = "https://www.youtube.com/watch?v=PEGAR_ID_DEL_VIDEO";
+const VIDEO_URL = "https://www.youtube.com/watch?v=h9IBVmabcJU&pp=ugUEEgJlc9IHCQkTDAGHKiGM7w%3D%3D";
 
 const puzzle = document.getElementById("puzzle");
 const counter = document.getElementById("counter");
@@ -76,7 +77,7 @@ function draw(found) {
     piece.className = "piece " + (found.has(n) ? "found" : "missing");
 
     if (found.has(n)) {
-      piece.style.backgroundImage = "url('assets/imagen.jpg')";
+      piece.style.backgroundImage = "url('assets/imagen.png')";
       piece.style.backgroundPosition = backgroundPosition(n);
     } else {
       piece.innerHTML = `<span>${n}</span>`;
